@@ -523,21 +523,21 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3">
         <div className="glass-card p-3 flex items-center gap-3 h-14">
-          <div className="bg-white/5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="bg-surface w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
             <TrendingUp size={14} className="text-accent" />
           </div>
           <div>
             <p className="text-lg font-bold leading-none">{history.length}</p>
-            <p className="text-[9px] text-muted uppercase tracking-wider font-bold">Sessões</p>
+            <p className="text-[9px] text-muted font-black italic uppercase tracking-tighter">Sessões</p>
           </div>
         </div>
         <div className="glass-card p-3 flex items-center gap-3 h-14">
-          <div className="bg-white/5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="bg-surface w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
             <Dumbbell size={14} className="text-accent" />
           </div>
           <div>
             <p className="text-lg font-bold leading-none">{templates.length}</p>
-            <p className="text-[9px] text-muted uppercase tracking-wider font-bold">Treinos</p>
+            <p className="text-[9px] text-muted font-black italic uppercase tracking-tighter">Treinos</p>
           </div>
         </div>
       </div>
@@ -545,10 +545,10 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
       {/* Quick Start Section */}
       <section>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-base font-bold">Iniciar Treino</h2>
+          <h2 className="text-base font-black italic uppercase tracking-tighter">Iniciar Treino</h2>
           <button 
             onClick={() => onNavigate('templates')}
-            className="text-accent text-[10px] font-bold uppercase tracking-wider flex items-center"
+            className="text-accent text-[10px] font-black italic uppercase tracking-tighter flex items-center"
           >
             Gerenciar <ChevronRight size={12} />
           </button>
@@ -577,7 +577,7 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
                 <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                   <Plus size={16} className="text-accent" />
                 </div>
-                <span className="text-[8px] font-bold text-muted uppercase tracking-widest">criar treino</span>
+                <span className="text-[8px] font-black italic uppercase tracking-tighter text-muted">criar treino</span>
               </button>
             </div>
           )}
@@ -587,10 +587,10 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
       {/* Last Session Section */}
       <section>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-base font-bold">Última Atividade</h2>
+          <h2 className="text-base font-black italic uppercase tracking-tighter">Última Atividade</h2>
           <button 
             onClick={() => onNavigate('history')}
-            className="text-accent text-[10px] font-bold uppercase tracking-wider flex items-center"
+            className="text-accent text-[10px] font-black italic uppercase tracking-tighter flex items-center"
           >
             Histórico <ChevronRight size={12} />
           </button>
@@ -603,7 +603,7 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
             </div>
             <div className="flex flex-wrap gap-1 justify-end">
               {lastSession.exercises.slice(0, 2).map((ex, i) => (
-                <span key={i} className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded-full text-muted font-bold uppercase tracking-tighter">
+                <span key={i} className="text-[8px] bg-surface px-1.5 py-0.5 rounded-full text-muted font-bold uppercase tracking-tighter">
                   {ex.name.split(' ')[0]}
                 </span>
               ))}
@@ -635,7 +635,7 @@ function TemplatesView({ templates, onAdd, onEdit, onDelete, onStart }: {
       className="space-y-4"
     >
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Meus Treinos</h2>
+        <h2 className="text-xl font-black italic uppercase tracking-tighter">Meus Treinos</h2>
         <button onClick={onAdd} className="w-8 h-8 rounded-full bg-accent text-black flex items-center justify-center shadow-lg shadow-accent/20">
           <Plus size={20} />
         </button>
@@ -676,7 +676,7 @@ function TemplatesView({ templates, onAdd, onEdit, onDelete, onStart }: {
               </div>
               <button 
                 onClick={() => onStart(t)}
-                className="w-full py-1.5 bg-white/5 text-white rounded-lg text-[10px] font-bold hover:bg-white/10 transition-all border border-white/10"
+                className="w-full py-1.5 bg-surface text-white rounded-lg text-[10px] font-bold hover:bg-surface/80 transition-all border border-white/10"
               >
                 Iniciar Treino
               </button>
@@ -793,7 +793,7 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
       className="space-y-4"
     >
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Biblioteca</h2>
+        <h2 className="text-xl font-black italic uppercase tracking-tighter">Biblioteca</h2>
         <button 
           onClick={() => setIsAdding(true)} 
           className="w-8 h-8 rounded-full bg-accent text-black flex items-center justify-center shadow-lg shadow-accent/20"
@@ -810,7 +810,7 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
             className={`px-3 py-1 rounded-full text-[10px] font-bold whitespace-nowrap transition-colors ${
               selectedFilter === cat 
                 ? 'bg-accent text-black' 
-                : 'bg-white/5 text-muted hover:bg-white/10'
+                : 'bg-surface text-muted hover:bg-surface/80'
             }`}
           >
             {cat}
@@ -827,7 +827,7 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 text-muted rounded-full">
+                  <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 bg-surface text-muted rounded-full">
                     {ex.category || 'Outros'}
                   </span>
                 </div>
@@ -874,15 +874,15 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
               exit={{ y: '100%' }}
               className="bg-surface w-full max-w-md h-[90vh] sm:h-auto sm:max-h-[80vh] rounded-t-[32px] sm:rounded-[32px] overflow-hidden flex flex-col border-t border-border sm:border"
             >
-              <div className="px-6 py-4 border-b border-border flex justify-between items-center">
-                <h3 className="font-semibold text-lg">{editing ? 'Editar Exercício' : 'Novo Exercício'}</h3>
-                <button onClick={() => { setIsAdding(false); setEditing(null); }} className="p-2 hover:bg-white/5 rounded-full"><X size={20} /></button>
-              </div>
+        <div className="px-6 py-4 border-b border-border flex justify-between items-center">
+          <h3 className="font-black italic uppercase tracking-tighter text-lg">{editing ? 'Editar Exercício' : 'Novo Exercício'}</h3>
+          <button onClick={() => { setIsAdding(false); setEditing(null); }} className="p-2 hover:bg-surface rounded-full"><X size={20} /></button>
+        </div>
 
               <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
                 <div className="flex justify-center">
                   <div className="relative group">
-                    <div className="w-32 h-32 rounded-3xl overflow-hidden border-2 border-dashed border-border flex items-center justify-center bg-white/5">
+                    <div className="w-32 h-32 rounded-3xl overflow-hidden border-2 border-dashed border-border flex items-center justify-center bg-surface">
                       {imageId ? (
                         <CachedImage imageId={imageId} className="w-full h-full object-cover" />
                       ) : (
@@ -930,7 +930,7 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
                               key={suggestion}
                               type="button"
                               onClick={() => setName(suggestion)}
-                              className="text-[10px] px-2 py-1 bg-white/5 hover:bg-white/10 text-muted rounded-md transition-colors border border-border/30"
+                              className="text-[10px] px-2 py-1 bg-surface hover:bg-surface/80 text-muted rounded-md transition-colors border border-border/30"
                             >
                               + {suggestion}
                             </button>
@@ -995,7 +995,7 @@ function HistoryView({ history, onDelete }: {
       exit={{ opacity: 0, x: -20 }}
       className="space-y-6"
     >
-      <h2 className="text-2xl font-semibold">Histórico</h2>
+      <h2 className="text-xl font-black italic uppercase tracking-tighter">Histórico</h2>
 
       <div className="space-y-4">
         {history.length > 0 ? (
@@ -1018,7 +1018,7 @@ function HistoryView({ history, onDelete }: {
               </div>
               <div className="space-y-2">
                 {session.exercises.map((ex, i) => (
-                  <div key={i} className="bg-white/5 rounded-xl p-3">
+                  <div key={i} className="bg-surface rounded-xl p-3">
                     <div className="flex items-center gap-4 mb-2">
                       <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5 ${ex.completed ? 'bg-accent' : 'bg-white/10'}`} />
                       <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 border border-border bg-surface shadow-sm">
@@ -1028,7 +1028,7 @@ function HistoryView({ history, onDelete }: {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {ex.sets.map((set, si) => (
-                        <div key={si} className="text-[10px] bg-white/5 border border-border px-2 py-1 rounded-md whitespace-nowrap">
+                        <div key={si} className="text-[10px] bg-surface border border-border px-2 py-1 rounded-md whitespace-nowrap">
                           <span className="text-muted">S{si+1}:</span> {set.reps} x {set.weight}kg
                         </div>
                       ))}
@@ -1126,8 +1126,8 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
         className="bg-surface w-full max-w-md h-[90vh] sm:h-auto sm:max-h-[80vh] rounded-t-[32px] sm:rounded-[32px] overflow-hidden flex flex-col border-t border-border sm:border"
       >
         <div className="px-6 py-4 border-b border-border flex justify-between items-center">
-          <h3 className="font-semibold text-lg">{initialData ? 'Editar Treino' : 'Criar Treino'}</h3>
-          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full"><X size={20} /></button>
+          <h3 className="font-black italic uppercase tracking-tighter text-lg">{initialData ? 'Editar Treino' : 'Criar Treino'}</h3>
+          <button onClick={onClose} className="p-2 hover:bg-surface rounded-full"><X size={20} /></button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
@@ -1148,7 +1148,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
             </div>
             
             {exercises.map((ex) => (
-              <div key={ex.id} className="bg-white/5 rounded-2xl p-4 space-y-4 relative border border-border/50">
+              <div key={ex.id} className="bg-surface rounded-2xl p-4 space-y-4 relative border border-border/50">
                 <div className="flex justify-between items-start gap-4">
                   <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 border border-border shadow-sm bg-surface">
                     <CachedImage imageId={ex.image} className="w-full h-full object-cover" />
@@ -1170,7 +1170,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
                     <div key={si} className="flex items-center gap-3">
                       <span className="text-[10px] font-bold text-muted w-4">#{si+1}</span>
                       <div className="flex-1 grid grid-cols-2 gap-2">
-                        <div className="flex items-center bg-white/5 border border-border rounded-lg px-2">
+                        <div className="flex items-center bg-surface border border-border rounded-lg px-2">
                           <input 
                             type="number" 
                             className="w-full py-1 text-sm focus:outline-none text-center bg-transparent text-white" 
@@ -1180,7 +1180,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
                           />
                           <span className="text-[8px] text-muted ml-1 uppercase">reps</span>
                         </div>
-                        <div className="flex items-center bg-white/5 border border-border rounded-lg px-2">
+                        <div className="flex items-center bg-surface border border-border rounded-lg px-2">
                           <input 
                             type="number" 
                             className="w-full py-1 text-sm focus:outline-none text-center bg-transparent text-white" 
@@ -1238,7 +1238,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
               className="absolute inset-0 bg-background z-[120] flex flex-col"
             >
               <div className="px-6 py-4 border-b border-border flex items-center gap-4">
-                <button onClick={() => setIsSelectingExercise(false)} className="p-2 hover:bg-white/5 rounded-full">
+                <button onClick={() => setIsSelectingExercise(false)} className="p-2 hover:bg-surface rounded-full">
                   <ArrowLeft size={20} />
                 </button>
                 <h3 className="font-semibold text-lg">Escolher Exercício</h3>
@@ -1252,7 +1252,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
                     className={`px-3 py-1 rounded-full text-[10px] font-bold whitespace-nowrap transition-colors ${
                       selectedFilter === cat 
                         ? 'bg-accent text-black' 
-                        : 'bg-white/5 text-muted hover:bg-white/10'
+                        : 'bg-surface text-muted hover:bg-surface/80'
                     }`}
                   >
                     {cat}
@@ -1266,7 +1266,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
                     <button 
                       key={ex.id}
                       onClick={() => addExerciseFromLibrary(ex)}
-                      className="w-full flex items-center gap-4 p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-colors text-left border border-border/30"
+                      className="w-full flex items-center gap-4 p-3 bg-surface hover:bg-surface/80 rounded-2xl transition-colors text-left border border-border/30"
                     >
                       <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-border bg-surface">
                         <CachedImage imageId={ex.imageId} className="w-full h-full object-cover" />
@@ -1409,17 +1409,17 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
     >
       <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-background sticky top-0 z-10">
         <div>
-          <h3 className="font-bold text-lg leading-tight">{currentSession.title}</h3>
-          <p className="text-[10px] text-muted uppercase font-bold tracking-widest">Em execução</p>
+          <h3 className="font-black italic uppercase tracking-tighter text-lg leading-tight">{currentSession.title}</h3>
+          <p className="text-[10px] text-muted uppercase font-black italic tracking-widest">Em execução</p>
         </div>
         <div className="flex gap-2">
           <button 
             onClick={() => setIsEditing(true)}
-            className="p-2 hover:bg-white/5 rounded-full text-muted hover:text-accent transition-colors"
+            className="p-2 hover:bg-surface rounded-full text-muted hover:text-accent transition-colors"
           >
             <Edit2 size={20} />
           </button>
-          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full"><X size={20} /></button>
+          <button onClick={onClose} className="p-2 hover:bg-surface rounded-full"><X size={20} /></button>
         </div>
       </div>
 
@@ -1432,7 +1432,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
             return (
               <div key={i} className={`rounded-2xl border transition-all overflow-hidden ${
                 completed 
-                  ? 'bg-white/5 border-white/10' 
+                  ? 'bg-surface border-white/10' 
                   : 'bg-surface border-border'
               }`}>
                 <div className="p-4 flex flex-col gap-4">
@@ -1450,14 +1450,14 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
                         </h4>
                         <button 
                           onClick={() => setInfoExercise(libEx || null)}
-                          className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-muted hover:text-accent hover:bg-white/5 rounded-full transition-colors"
+                          className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-muted hover:text-accent hover:bg-surface rounded-full transition-colors"
                         >
                           <Info size={18} />
                         </button>
                       </div>
                       <div className="flex items-center gap-2 mt-1">
                         <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black ${
-                          completed ? 'bg-accent text-black' : 'bg-white/5 text-muted'
+                          completed ? 'bg-accent text-black' : 'bg-surface text-muted'
                         }`}>
                           {i + 1}
                         </div>
@@ -1475,7 +1475,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
                         className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all duration-300 ${
                           completedSets[i][si] 
                             ? 'bg-accent/10 border-accent' 
-                            : 'bg-white/5 border-border hover:border-white/20'
+                            : 'bg-surface border-border hover:border-white/20'
                         } ${completed ? 'opacity-40 cursor-not-allowed' : ''}`}
                       >
                         <div className="flex items-center gap-3">
@@ -1574,7 +1574,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
                 </div>
                 <button 
                   onClick={() => setInfoExercise(null)}
-                  className="w-full py-4 bg-white/5 rounded-2xl font-bold text-sm hover:bg-white/10 transition-colors mt-4"
+                  className="w-full py-4 bg-surface rounded-2xl font-bold text-sm hover:bg-surface/80 transition-colors mt-4"
                 >
                   Entendi
                 </button>
@@ -1634,7 +1634,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
                 </button>
                 <button 
                   onClick={() => finalize(false)}
-                  className="w-full py-4 bg-white/5 text-muted rounded-2xl font-bold"
+                  className="w-full py-4 bg-surface text-muted rounded-2xl font-bold"
                 >
                   Não, apenas descartar
                 </button>
@@ -1655,10 +1655,10 @@ function NavButton({ active, onClick, icon, label }: { active: boolean, onClick:
       onClick={onClick}
       className={`flex flex-col items-center gap-1 transition-all ${active ? 'text-accent' : 'text-muted hover:text-white/50'}`}
     >
-      <div className={`p-1.5 rounded-xl transition-all ${active ? 'bg-white/5' : ''}`}>
+      <div className={`p-1.5 rounded-xl transition-all ${active ? 'bg-surface' : ''}`}>
         {icon}
       </div>
-      <span className={`text-[8px] font-bold uppercase tracking-widest transition-all ${active ? 'opacity-100' : 'opacity-0'}`}>{label}</span>
+      <span className={`text-[8px] font-black italic uppercase tracking-tighter transition-all ${active ? 'opacity-100' : 'opacity-0'}`}>{label}</span>
     </button>
   );
 }
