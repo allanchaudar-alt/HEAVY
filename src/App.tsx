@@ -306,7 +306,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen max-w-md mx-auto relative pb-24">
+    <div className="min-h-[calc(100vh-2rem)] sm:min-h-[calc(100vh-4rem)] max-w-md mx-auto relative pb-24 bg-background shadow-2xl rounded-[32px] sm:rounded-[40px] overflow-hidden">
       {/* Header */}
       <header className="px-6 pt-12 pb-6 flex justify-between items-end">
         <div>
@@ -335,41 +335,41 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm"
+            className="absolute inset-0 z-[200] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm"
           >
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden"
+              className="bg-surface w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden border border-border"
             >
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                <h2 className="text-lg font-bold">Configurações</h2>
-                <button onClick={() => setIsSettingsOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
+              <div className="p-6 border-b border-border flex justify-between items-center">
+                <h2 className="text-lg font-black italic uppercase tracking-tighter">Configurações</h2>
+                <button onClick={() => setIsSettingsOpen(false)} className="p-2 hover:bg-black/20 rounded-full">
                   <X size={20} />
                 </button>
               </div>
               <div className="p-6 space-y-4">
                 <button 
                   onClick={exportBackup}
-                  className="w-full flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left"
+                  className="w-full flex items-center gap-4 p-4 bg-black/20 hover:bg-black/30 rounded-2xl transition-colors text-left border border-border/30"
                 >
-                  <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center">
                     <Download size={20} />
                   </div>
                   <div>
-                    <p className="font-bold">Exportar Backup</p>
-                    <p className="text-xs text-muted">Salvar treinos e fotos em JSON</p>
+                    <p className="font-bold uppercase tracking-tighter">Exportar Backup</p>
+                    <p className="text-[10px] text-muted uppercase">Salvar treinos e fotos em JSON</p>
                   </div>
                 </button>
 
-                <label className="w-full flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left cursor-pointer">
-                  <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center">
+                <label className="w-full flex items-center gap-4 p-4 bg-black/20 hover:bg-black/30 rounded-2xl transition-colors text-left cursor-pointer border border-border/30">
+                  <div className="w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center">
                     <Upload size={20} />
                   </div>
                   <div>
-                    <p className="font-bold">Importar Backup</p>
-                    <p className="text-xs text-muted">Restaurar dados de um arquivo JSON</p>
+                    <p className="font-bold uppercase tracking-tighter">Importar Backup</p>
+                    <p className="text-[10px] text-muted uppercase">Restaurar dados de um arquivo JSON</p>
                   </div>
                   <input 
                     type="file" 
@@ -381,14 +381,14 @@ export default function App() {
 
                 <button 
                   onClick={performGarbageCollection}
-                  className="w-full flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left"
+                  className="w-full flex items-center gap-4 p-4 bg-black/20 hover:bg-black/30 rounded-2xl transition-colors text-left border border-border/30"
                 >
-                  <div className="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center">
                     <RefreshCw size={20} />
                   </div>
                   <div>
-                    <p className="font-bold">Limpeza de Dados</p>
-                    <p className="text-xs text-muted">Remover fotos não utilizadas</p>
+                    <p className="font-bold uppercase tracking-tighter">Limpeza de Dados</p>
+                    <p className="text-[10px] text-muted uppercase">Remover fotos não utilizadas</p>
                   </div>
                 </button>
               </div>
@@ -445,7 +445,7 @@ export default function App() {
       </main>
 
       {/* Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-background/80 backdrop-blur-xl border-t border-border px-8 py-3 flex justify-around items-center z-50">
+      <nav className="absolute bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border px-8 py-3 flex justify-around items-center z-50">
         <NavButton 
           active={activeTab === 'dashboard'} 
           onClick={() => setActiveTab('dashboard')} 
@@ -866,7 +866,7 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[250] flex items-end sm:items-center justify-center p-0 sm:p-4"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm z-[250] flex items-end sm:items-center justify-center p-0 sm:p-4"
           >
             <motion.div 
               initial={{ y: '100%' }}
@@ -1117,7 +1117,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[110] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      className="absolute inset-0 bg-black/40 backdrop-blur-sm z-[110] flex items-end sm:items-center justify-center p-0 sm:p-4"
     >
       <motion.div 
         initial={{ y: '100%' }}
@@ -1405,7 +1405,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-background z-[100] flex flex-col"
+      className="absolute inset-0 bg-background z-[100] flex flex-col"
     >
       <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-background sticky top-0 z-10">
         <div>
@@ -1529,7 +1529,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setZoomedImage(null)}
-            className="fixed inset-0 z-[300] bg-black/95 flex items-center justify-center p-4 cursor-zoom-out"
+            className="absolute inset-0 z-[300] bg-black/95 flex items-center justify-center p-4 cursor-zoom-out"
           >
             <motion.div 
               initial={{ scale: 0.8 }}
@@ -1553,7 +1553,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200] flex items-center justify-center p-6"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm z-[200] flex items-center justify-center p-6"
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
@@ -1611,7 +1611,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6"
           >
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
