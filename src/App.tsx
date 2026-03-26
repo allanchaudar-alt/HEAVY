@@ -647,13 +647,13 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-base font-black uppercase tracking-tighter">Iniciar Treino</h2>
         </div>
-        <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+        <div className="grid grid-cols-2 gap-3">
           {templates.length > 0 ? (
             templates.map(t => (
               <button 
                 key={t.id}
                 onClick={() => onStartWorkout(t)}
-                className="flex-shrink-0 w-32 glass-card p-3 text-left hover:border-accent transition-colors"
+                className="glass-card p-3 text-left hover:border-accent transition-colors"
               >
                 <div className="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mb-2">
                   <Plus size={12} className="text-accent" />
@@ -663,7 +663,7 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
               </button>
             ))
           ) : (
-            <div className="w-full flex flex-col items-center justify-center py-2">
+            <div className="col-span-2 flex flex-col items-center justify-center py-2">
               <button 
                 onClick={() => onNavigate('templates')}
                 className="flex flex-col items-center gap-2 group"
