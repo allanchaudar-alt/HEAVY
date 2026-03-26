@@ -3,13 +3,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  ResponsiveContainer,
+  Cell
+} from 'recharts';
 import { 
   Plus, 
   Calendar, 
   LayoutDashboard, 
   Dumbbell, 
   ChevronRight, 
+  ChevronDown,
   Clock,
   Trash2, 
   X,
@@ -125,6 +135,31 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [categories, setCategories] = useState<ExerciseCategory[]>(DEFAULT_CATEGORIES);
   const [predefinedExercises, setPredefinedExercises] = useState<Record<string, string[]>>(DEFAULT_EXERCISES);
+  
+  // Confirmation Modal State
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {},
+  });
+
+  const askConfirmation = (title: string, message: string, onConfirm: () => void) => {
+    setConfirmModal({
+      isOpen: true,
+      title,
+      message,
+      onConfirm: () => {
+        onConfirm();
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+      }
+    });
+  };
 
   // Load data from localStorage
   useEffect(() => {
@@ -178,7 +213,11 @@ export default function App() {
   };
 
   const deleteTemplate = (id: string) => {
-    setTemplates(templates.filter(t => t.id !== id));
+    askConfirmation(
+      'Excluir Treino',
+      'Tem certeza que deseja excluir este treino? Esta ação não pode ser desfeita.',
+      () => setTemplates(templates.filter(t => t.id !== id))
+    );
   };
 
   const startWorkout = (template: WorkoutTemplate) => {
@@ -307,7 +346,7 @@ export default function App() {
   };
 
   return (
-    <div className="h-[calc(100vh-2rem)] sm:h-[calc(100vh-4rem)] max-w-md mx-auto relative bg-background shadow-2xl rounded-[32px] sm:rounded-[40px] overflow-hidden flex flex-col">
+    <div className="min-h-screen relative bg-background flex flex-col">
       {/* Header */}
       <header className="px-6 py-10 flex flex-col items-center relative flex-shrink-0">
         <button 
@@ -335,7 +374,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-[200] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm"
           >
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
@@ -433,44 +472,51 @@ export default function App() {
               predefinedExercises={predefinedExercises}
               onUpdateCategories={setCategories}
               onUpdatePredefined={setPredefinedExercises}
+              askConfirmation={askConfirmation}
             />
           )}
           {activeTab === 'history' && (
             <HistoryView 
               history={history}
-              onDelete={(id) => setHistory(history.filter(h => h.id !== id))}
+              onDelete={(id) => askConfirmation(
+                'Excluir Histórico',
+                'Deseja remover este registro de treino do seu histórico?',
+                () => setHistory(history.filter(h => h.id !== id))
+              )}
             />
           )}
         </AnimatePresence>
       </main>
 
       {/* Navigation Bar */}
-      <nav className="absolute bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border px-8 py-3 flex justify-around items-center z-50">
-        <NavButton 
-          active={activeTab === 'dashboard'} 
-          onClick={() => setActiveTab('dashboard')} 
-          icon={<LayoutDashboard size={20} />} 
-          label="Início" 
-        />
-        <NavButton 
-          active={activeTab === 'templates'} 
-          onClick={() => setActiveTab('templates')} 
-          icon={<PlusCircle size={20} />} 
-          label="Treinos" 
-        />
-        <NavButton 
-          active={activeTab === 'library'} 
-          onClick={() => setActiveTab('library')} 
-          icon={<BookOpen size={20} />} 
-          label="Biblioteca" 
-        />
-        <NavButton 
-          active={activeTab === 'history'} 
-          onClick={() => setActiveTab('history')} 
-          icon={<History size={20} />} 
-          label="Histórico" 
-        />
-      </nav>
+      <div className="fixed bottom-6 left-0 right-0 px-6 z-50 pointer-events-none">
+        <nav className="max-w-md mx-auto bg-surface/80 backdrop-blur-xl border border-border px-6 py-3 flex justify-around items-center rounded-[32px] shadow-2xl pointer-events-auto">
+          <NavButton 
+            active={activeTab === 'dashboard'} 
+            onClick={() => setActiveTab('dashboard')} 
+            icon={<LayoutDashboard size={20} />} 
+            label="Início" 
+          />
+          <NavButton 
+            active={activeTab === 'templates'} 
+            onClick={() => setActiveTab('templates')} 
+            icon={<PlusCircle size={20} />} 
+            label="Treinos" 
+          />
+          <NavButton 
+            active={activeTab === 'library'} 
+            onClick={() => setActiveTab('library')} 
+            icon={<BookOpen size={20} />} 
+            label="Biblioteca" 
+          />
+          <NavButton 
+            active={activeTab === 'history'} 
+            onClick={() => setActiveTab('history')} 
+            icon={<History size={20} />} 
+            label="Histórico" 
+          />
+        </nav>
+      </div>
 
       {/* Modals */}
       <AnimatePresence>
@@ -499,6 +545,60 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmationModal 
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
+    </div>
+  );
+}
+
+interface ConfirmationModalProps {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+function ConfirmationModal({ isOpen, title, message, onConfirm, onCancel }: ConfirmationModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="bg-surface border-2 border-border w-full max-w-xs rounded-3xl overflow-hidden shadow-2xl"
+      >
+        <div className="p-6 text-center space-y-4">
+          <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
+            <Trash2 size={32} className="text-destructive" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-xl font-black uppercase tracking-tighter">{title}</h3>
+            <p className="text-muted text-sm">{message}</p>
+          </div>
+        </div>
+        <div className="flex border-t border-border">
+          <button 
+            onClick={onCancel}
+            className="flex-1 py-4 font-black uppercase tracking-tighter hover:bg-white/5 transition-colors"
+          >
+            Cancelar
+          </button>
+          <button 
+            onClick={onConfirm}
+            className="flex-1 py-4 bg-destructive text-white font-black uppercase tracking-tighter hover:bg-destructive/90 transition-colors"
+          >
+            Excluir
+          </button>
+        </div>
+      </motion.div>
     </div>
   );
 }
@@ -688,13 +788,14 @@ function TemplatesView({ templates, onAdd, onEdit, onDelete, onStart }: {
   );
 }
 
-function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpdateCategories, onUpdatePredefined }: { 
+function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpdateCategories, onUpdatePredefined, askConfirmation }: { 
   library: LibraryExercise[], 
   onUpdate: (l: LibraryExercise[]) => void,
   categories: ExerciseCategory[],
   predefinedExercises: Record<string, string[]>,
   onUpdateCategories: (c: ExerciseCategory[]) => void,
-  onUpdatePredefined: (p: Record<string, string[]>) => void
+  onUpdatePredefined: (p: Record<string, string[]>) => void,
+  askConfirmation: (title: string, message: string, onConfirm: () => void) => void
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [editing, setEditing] = useState<LibraryExercise | null>(null);
@@ -764,9 +865,11 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
   };
 
   const deleteExercise = (id: string) => {
-    if (confirm('Tem certeza que deseja excluir este exercício da biblioteca?')) {
-      onUpdate(library.filter(ex => ex.id !== id));
-    }
+    askConfirmation(
+      'Excluir Exercício',
+      'Tem certeza que deseja excluir este exercício da biblioteca?',
+      () => onUpdate(library.filter(ex => ex.id !== id))
+    );
   };
 
   const filteredLibrary = selectedFilter === 'Todos' 
@@ -976,6 +1079,14 @@ function HistoryView({ history, onDelete }: {
   history: WorkoutLog[], 
   onDelete: (id: string) => void
 }) {
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, x: 20 }}
@@ -985,52 +1096,212 @@ function HistoryView({ history, onDelete }: {
     >
       <h2 className="text-xl font-black uppercase tracking-tighter">Histórico</h2>
 
+      {/* Activity Chart */}
+      <section>
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-xs font-black uppercase tracking-widest text-muted">Volume de Atividade</h2>
+        </div>
+        <ProgressChart history={history} />
+      </section>
+
       <div className="space-y-4">
         {history.length > 0 ? (
-          history.map(session => (
-            <div key={session.id} className="glass-card p-5">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="font-semibold text-lg leading-tight break-words">{session.title}</h3>
-                  <div className="flex items-center text-muted text-xs mt-1">
-                    <Calendar size={12} className="mr-1" />
-                    {new Date(session.date).toLocaleDateString()}
+          history.map(session => {
+            const isExpanded = expandedIds.includes(session.id);
+            return (
+              <div key={session.id} className="glass-card overflow-hidden">
+                <div 
+                  onClick={() => toggleExpand(session.id)}
+                  className="p-5 flex justify-between items-center cursor-pointer hover:bg-white/5 transition-colors"
+                >
+                  <div className="flex-1 min-w-0 mr-4">
+                    <h3 className="font-semibold text-lg leading-tight truncate">{session.title}</h3>
+                    <div className="flex items-center text-muted text-[10px] mt-1 font-black uppercase tracking-tighter">
+                      <Calendar size={10} className="mr-1" />
+                      {new Date(session.date).toLocaleDateString('pt-BR', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(session.id);
+                      }}
+                      className="text-muted hover:text-red-500 transition-colors p-1"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                    <motion.div
+                      animate={{ rotate: isExpanded ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-muted"
+                    >
+                      <ChevronDown size={20} />
+                    </motion.div>
                   </div>
                 </div>
-                <button 
-                  onClick={() => onDelete(session.id)}
-                  className="text-muted hover:text-red-500 transition-colors"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-              <div className="space-y-2">
-                {session.exercises.map((ex, i) => (
-                  <div key={i} className="bg-surface rounded-xl p-3">
-                    <div className="flex items-center gap-4 mb-2">
-                      <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5 ${ex.completed ? 'bg-accent' : 'bg-white/10'}`} />
-                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 border border-border bg-surface shadow-sm">
-                        <CachedImage imageId={ex.image} className="w-full h-full object-cover" />
+
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    >
+                      <div className="px-5 pb-5 space-y-3 border-t border-border/50 pt-4">
+                        {session.exercises.map((ex, i) => (
+                          <div key={i} className="bg-surface/50 rounded-xl p-3 border border-border/30">
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${ex.completed ? 'bg-accent' : 'bg-white/10'}`} />
+                              <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border border-border bg-surface shadow-sm">
+                                <CachedImage imageId={ex.image} className="w-full h-full object-cover" />
+                              </div>
+                              <span className={`text-xs leading-tight font-bold uppercase tracking-tight ${ex.completed ? 'text-white' : 'text-muted line-through'}`}>
+                                {ex.name}
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5 pl-4.5">
+                              {ex.sets.map((set, si) => (
+                                <div key={si} className="text-[9px] bg-surface border border-border px-2 py-0.5 rounded font-black uppercase tracking-tighter">
+                                  <span className="text-muted">S{si+1}:</span> {set.reps} x {set.weight}kg
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <span className={`text-sm leading-tight break-words ${ex.completed ? 'text-white font-medium' : 'text-muted line-through'}`}>{ex.name}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {ex.sets.map((set, si) => (
-                        <div key={si} className="text-[10px] bg-surface border border-border px-2 py-1 rounded-md whitespace-nowrap">
-                          <span className="text-muted">S{si+1}:</span> {set.reps} x {set.weight}kg
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
-          <p className="text-center py-12 text-muted">Nenhum treino finalizado ainda.</p>
+          <p className="text-center py-12 text-muted font-black uppercase tracking-tighter text-xs">Nenhum treino finalizado ainda.</p>
         )}
       </div>
     </motion.div>
+  );
+}
+
+function ProgressChart({ history }: { history: WorkoutLog[] }) {
+  const [view, setView] = useState<'day' | 'week' | 'month'>('day');
+
+  const data = useMemo(() => {
+    const now = new Date();
+    
+    if (view === 'day') {
+      // Last 7 days
+      return Array.from({ length: 7 }).map((_, i) => {
+        const d = new Date();
+        d.setDate(now.getDate() - (6 - i));
+        const dateStr = d.toISOString().split('T')[0];
+        const count = history
+          .filter(h => h.date.split('T')[0] === dateStr)
+          .reduce((acc, h) => acc + h.exercises.filter(ex => ex.completed).length, 0);
+        
+        return {
+          name: d.toLocaleDateString('pt-BR', { weekday: 'short' }).toUpperCase().replace('.', ''),
+          value: count
+        };
+      });
+    } else if (view === 'week') {
+      // Last 4 weeks
+      return Array.from({ length: 4 }).map((_, i) => {
+        const start = new Date();
+        start.setDate(now.getDate() - (3 - i) * 7 - now.getDay());
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        
+        const count = history.filter(h => {
+          const d = new Date(h.date);
+          return d >= start && d <= end;
+        }).reduce((acc, h) => acc + h.exercises.filter(ex => ex.completed).length, 0);
+
+        return {
+          name: `S${i + 1}`,
+          value: count
+        };
+      });
+    } else {
+      // Last 6 months
+      return Array.from({ length: 6 }).map((_, i) => {
+        const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
+        const month = d.getMonth();
+        const year = d.getFullYear();
+        
+        const count = history.filter(h => {
+          const hd = new Date(h.date);
+          return hd.getMonth() === month && hd.getFullYear() === year;
+        }).reduce((acc, h) => acc + h.exercises.filter(ex => ex.completed).length, 0);
+
+        return {
+          name: d.toLocaleDateString('pt-BR', { month: 'short' }).toUpperCase().replace('.', ''),
+          value: count
+        };
+      });
+    }
+  }, [history, view]);
+
+  return (
+    <div className="glass-card p-4 space-y-4">
+      <div className="flex gap-2">
+        {(['day', 'week', 'month'] as const).map((v) => (
+          <button
+            key={v}
+            onClick={() => setView(v)}
+            className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+              view === v ? 'bg-accent text-black' : 'bg-surface text-muted hover:bg-white/5'
+            }`}
+          >
+            {v === 'day' ? 'Dia' : v === 'week' ? 'Semana' : 'Mês'}
+          </button>
+        ))}
+      </div>
+
+      <div className="h-40 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+            <XAxis 
+              dataKey="name" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: '#8E9299', fontSize: 10, fontWeight: 900 }}
+              dy={10}
+            />
+            <YAxis 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: '#8E9299', fontSize: 10, fontWeight: 900 }}
+            />
+            <Tooltip 
+              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+              contentStyle={{ 
+                backgroundColor: '#3A4526', 
+                border: '1px solid #4A5831',
+                borderRadius: '12px',
+                fontSize: '10px',
+                fontWeight: 900,
+                textTransform: 'uppercase'
+              }}
+              itemStyle={{ color: '#A3E635' }}
+            />
+            <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.value > 0 ? '#A3E635' : '#4A5831'} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 }
 
@@ -1105,7 +1376,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute inset-0 bg-black/40 backdrop-blur-sm z-[110] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[110] flex items-end sm:items-center justify-center p-0 sm:p-4"
     >
       <motion.div 
         initial={{ y: '100%' }}
@@ -1426,7 +1697,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute inset-0 bg-background z-[100] flex flex-col"
+      className="fixed inset-0 bg-background z-[100] flex flex-col"
     >
       <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-background sticky top-0 z-10">
         <div className="flex items-center gap-3">

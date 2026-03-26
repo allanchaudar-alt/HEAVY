@@ -15,7 +15,7 @@
 
 @layer base {
   body {
-    @apply bg-outer text-ink font-sans antialiased p-4 sm:p-8;
+    @apply bg-background text-ink font-sans antialiased;
   }
 }
 
