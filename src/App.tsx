@@ -10,6 +10,7 @@ import {
   LayoutDashboard, 
   Dumbbell, 
   ChevronRight, 
+  Clock,
   Trash2, 
   X,
   History,
@@ -319,7 +320,7 @@ export default function App() {
         <div className="flex flex-col items-center gap-3">
           <Dumbbell size={30} className="text-accent" />
           <div className="text-center">
-            <h1 className="text-3xl font-black tracking-tighter italic">HEAVY</h1>
+            <h1 className="text-3xl font-black tracking-tighter">HEAVY</h1>
             <p className="text-muted text-sm capitalize">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
@@ -343,7 +344,7 @@ export default function App() {
               className="bg-surface w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden border border-border"
             >
               <div className="p-6 border-b border-border flex justify-between items-center">
-                <h2 className="text-lg font-black italic uppercase tracking-tighter">Configurações</h2>
+                <h2 className="text-lg font-black uppercase tracking-tighter">Configurações</h2>
                 <button onClick={() => setIsSettingsOpen(false)} className="p-2 hover:bg-black/20 rounded-full">
                   <X size={20} />
                 </button>
@@ -527,7 +528,7 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
           </div>
           <div>
             <p className="text-lg font-bold leading-none">{history.length}</p>
-            <p className="text-[9px] text-muted font-black italic uppercase tracking-tighter">Sessões</p>
+            <p className="text-[9px] text-muted font-black uppercase tracking-tighter">Sessões</p>
           </div>
         </div>
         <div className="glass-card p-3 flex items-center gap-3 h-14">
@@ -536,7 +537,7 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
           </div>
           <div>
             <p className="text-lg font-bold leading-none">{templates.length}</p>
-            <p className="text-[9px] text-muted font-black italic uppercase tracking-tighter">Treinos</p>
+            <p className="text-[9px] text-muted font-black uppercase tracking-tighter">Treinos</p>
           </div>
         </div>
       </div>
@@ -544,13 +545,7 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
       {/* Quick Start Section */}
       <section>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-base font-black italic uppercase tracking-tighter">Iniciar Treino</h2>
-          <button 
-            onClick={() => onNavigate('templates')}
-            className="text-accent text-[10px] font-black italic uppercase tracking-tighter flex items-center"
-          >
-            Gerenciar <ChevronRight size={12} />
-          </button>
+          <h2 className="text-base font-black uppercase tracking-tighter">Iniciar Treino</h2>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
           {templates.length > 0 ? (
@@ -571,12 +566,12 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
             <div className="w-full flex flex-col items-center justify-center py-2">
               <button 
                 onClick={() => onNavigate('templates')}
-                className="flex flex-col items-center gap-1 group"
+                className="flex flex-col items-center gap-2 group"
               >
-                <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                  <Plus size={16} className="text-accent" />
+                <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  <Plus size={24} className="text-accent" />
                 </div>
-                <span className="text-[8px] font-black italic uppercase tracking-tighter text-muted">criar treino</span>
+                <span className="text-[10px] font-black uppercase tracking-tighter text-muted">criar treino</span>
               </button>
             </div>
           )}
@@ -586,13 +581,7 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
       {/* Last Session Section */}
       <section>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-base font-black italic uppercase tracking-tighter">Última Atividade</h2>
-          <button 
-            onClick={() => onNavigate('history')}
-            className="text-accent text-[10px] font-black italic uppercase tracking-tighter flex items-center"
-          >
-            Histórico <ChevronRight size={12} />
-          </button>
+          <h2 className="text-base font-black uppercase tracking-tighter">Última Atividade</h2>
         </div>
         {lastSession ? (
           <div className="glass-card p-3 flex items-center justify-between gap-4">
@@ -607,12 +596,12 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
                 </span>
               ))}
               {lastSession.exercises.length > 2 && (
-                <span className="text-[8px] text-muted italic">+{lastSession.exercises.length - 2}</span>
+                <span className="text-[8px] text-muted">+{lastSession.exercises.length - 2}</span>
               )}
             </div>
           </div>
         ) : (
-          <p className="text-center py-8 text-muted text-sm italic">Nenhuma atividade recente.</p>
+          <p className="text-center py-8 text-muted text-sm">Nenhuma atividade recente.</p>
         )}
       </section>
     </motion.div>
@@ -634,7 +623,7 @@ function TemplatesView({ templates, onAdd, onEdit, onDelete, onStart }: {
       className="space-y-4"
     >
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-black italic uppercase tracking-tighter">Meus Treinos</h2>
+        <h2 className="text-xl font-black uppercase tracking-tighter">Meus Treinos</h2>
         <button onClick={onAdd} className="w-8 h-8 rounded-full bg-accent text-black flex items-center justify-center shadow-lg shadow-accent/20">
           <Plus size={20} />
         </button>
@@ -792,7 +781,7 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
       className="space-y-4"
     >
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-black italic uppercase tracking-tighter">Biblioteca</h2>
+        <h2 className="text-xl font-black uppercase tracking-tighter">Biblioteca</h2>
         <button 
           onClick={() => setIsAdding(true)} 
           className="w-8 h-8 rounded-full bg-accent text-black flex items-center justify-center shadow-lg shadow-accent/20"
@@ -874,7 +863,7 @@ function LibraryView({ library, onUpdate, categories, predefinedExercises, onUpd
               className="bg-surface w-full max-w-md h-[90vh] sm:h-auto sm:max-h-[80vh] rounded-t-[32px] sm:rounded-[32px] overflow-hidden flex flex-col border-t border-border sm:border"
             >
         <div className="px-6 py-4 border-b border-border flex justify-between items-center">
-          <h3 className="font-black italic uppercase tracking-tighter text-lg">{editing ? 'Editar Exercício' : 'Novo Exercício'}</h3>
+          <h3 className="font-black uppercase tracking-tighter text-lg">{editing ? 'Editar Exercício' : 'Novo Exercício'}</h3>
           <button onClick={() => { setIsAdding(false); setEditing(null); }} className="p-2 hover:bg-surface rounded-full"><X size={20} /></button>
         </div>
 
@@ -994,7 +983,7 @@ function HistoryView({ history, onDelete }: {
       exit={{ opacity: 0, x: -20 }}
       className="space-y-6"
     >
-      <h2 className="text-xl font-black italic uppercase tracking-tighter">Histórico</h2>
+      <h2 className="text-xl font-black uppercase tracking-tighter">Histórico</h2>
 
       <div className="space-y-4">
         {history.length > 0 ? (
@@ -1038,7 +1027,7 @@ function HistoryView({ history, onDelete }: {
             </div>
           ))
         ) : (
-          <p className="text-center py-12 text-muted italic">Nenhum treino finalizado ainda.</p>
+          <p className="text-center py-12 text-muted">Nenhum treino finalizado ainda.</p>
         )}
       </div>
     </motion.div>
@@ -1125,7 +1114,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
         className="bg-surface w-full max-w-md h-[90vh] sm:h-auto sm:max-h-[80vh] rounded-t-[32px] sm:rounded-[32px] overflow-hidden flex flex-col border-t border-border sm:border"
       >
         <div className="px-6 py-4 border-b border-border flex justify-between items-center">
-          <h3 className="font-black italic uppercase tracking-tighter text-lg">{initialData ? 'Editar Treino' : 'Criar Treino'}</h3>
+          <h3 className="font-black uppercase tracking-tighter text-lg">{initialData ? 'Editar Treino' : 'Criar Treino'}</h3>
           <button onClick={onClose} className="p-2 hover:bg-surface rounded-full"><X size={20} /></button>
         </div>
 
@@ -1283,7 +1272,7 @@ function WorkoutModal({ onClose, onSave, initialData, library, categories }: {
                     </button>
                   ))
                 ) : (
-                  <p className="text-center py-12 text-muted italic">Nenhum exercício na biblioteca.</p>
+                  <p className="text-center py-12 text-muted">Nenhum exercício na biblioteca.</p>
                 )}
               </div>
             </motion.div>
@@ -1311,12 +1300,45 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
   const [showConfirmSave, setShowConfirmSave] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [infoExercise, setInfoExercise] = useState<LibraryExercise | null>(null);
+  
+  // Timer States
+  const [timerEnabled, setTimerEnabled] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+
+  useEffect(() => {
+    let interval: any;
+    if (isTimerRunning && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsTimerRunning(false);
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isTimerRunning, timeLeft]);
+
+  const startTimer = (seconds: number = 60) => {
+    if (!timerEnabled) return;
+    setTimeLeft(seconds);
+    setIsTimerRunning(true);
+  };
+
+  const adjustTimer = (seconds: number) => {
+    setTimeLeft((prev) => Math.max(0, prev + seconds));
+  };
 
   const toggleSet = (exIndex: number, setIndex: number) => {
     const newCompletedSets = [...completedSets];
     newCompletedSets[exIndex] = [...newCompletedSets[exIndex]];
-    newCompletedSets[exIndex][setIndex] = !newCompletedSets[exIndex][setIndex];
+    const isNowCompleted = !newCompletedSets[exIndex][setIndex];
+    newCompletedSets[exIndex][setIndex] = isNowCompleted;
     setCompletedSets(newCompletedSets);
+
+    if (isNowCompleted && timerEnabled) {
+      startTimer(60); // Default 60s rest
+    }
   };
 
   const isExerciseCompleted = (exIndex: number) => {
@@ -1407,9 +1429,18 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
       className="absolute inset-0 bg-background z-[100] flex flex-col"
     >
       <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-background sticky top-0 z-10">
-        <div>
-          <h3 className="font-black italic uppercase tracking-tighter text-lg leading-tight">{currentSession.title}</h3>
-          <p className="text-[10px] text-muted uppercase font-black italic tracking-widest">Em execução</p>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setTimerEnabled(!timerEnabled)}
+            className={`p-2 rounded-xl border transition-all ${timerEnabled ? 'bg-accent/10 border-accent text-accent' : 'bg-surface border-border text-muted'}`}
+            title={timerEnabled ? "Timer Ativado" : "Timer Desativado"}
+          >
+            <Clock size={18} />
+          </button>
+          <div>
+            <h3 className="font-black uppercase tracking-tighter text-lg leading-tight">{currentSession.title}</h3>
+            <p className="text-[10px] text-muted uppercase font-black tracking-widest">Em execução</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <button 
@@ -1421,6 +1452,55 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
           <button onClick={onClose} className="p-2 hover:bg-surface rounded-full"><X size={20} /></button>
         </div>
       </div>
+
+      {/* Timer Overlay */}
+      <AnimatePresence>
+        {isTimerRunning && timeLeft > 0 && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-accent text-black overflow-hidden sticky top-[73px] z-20"
+          >
+            <div className="px-6 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col">
+                  <span className="text-[8px] font-black uppercase tracking-widest leading-none">Descanso</span>
+                  <span className="text-3xl font-black italic tabular-nums leading-none">
+                    {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                  </span>
+                </div>
+                <div className="flex gap-1">
+                  <button 
+                    onClick={() => adjustTimer(-15)}
+                    className="px-2 py-1 bg-black/10 hover:bg-black/20 rounded font-black text-[10px] uppercase"
+                  >
+                    -15s
+                  </button>
+                  <button 
+                    onClick={() => adjustTimer(15)}
+                    className="px-2 py-1 bg-black/10 hover:bg-black/20 rounded font-black text-[10px] uppercase"
+                  >
+                    +15s
+                  </button>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsTimerRunning(false)}
+                className="p-2 hover:bg-black/10 rounded-full"
+              >
+                <X size={20} strokeWidth={3} />
+              </button>
+            </div>
+            <motion.div 
+              className="h-1 bg-black/20 origin-left"
+              initial={{ scaleX: 1 }}
+              animate={{ scaleX: 0 }}
+              transition={{ duration: timeLeft, ease: "linear" }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
         <div className="space-y-4">
@@ -1471,31 +1551,40 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
                         key={si} 
                         onClick={() => toggleSet(i, si)}
                         disabled={completed}
-                        className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all duration-300 ${
+                        className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300 ${
                           completedSets[i][si] 
                             ? 'bg-accent/10 border-accent' 
                             : 'bg-surface border-border hover:border-white/20'
                         } ${completed ? 'opacity-40 cursor-not-allowed' : ''}`}
                       >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
-                            completedSets[i][si] ? 'bg-accent text-black' : 'bg-white/10 text-muted'
-                          }`}>
-                            {si + 1}
-                          </div>
-                          <div className="text-left">
-                            <p className={`font-bold text-sm leading-none ${completedSets[i][si] ? 'text-accent' : 'text-ink'}`}>
-                              {set.reps} <span className="text-[9px] font-medium text-muted uppercase ml-0.5">reps</span>
-                            </p>
-                            <p className="text-[9px] text-muted font-medium mt-0.5">
-                              Carga: {set.weight}kg
-                            </p>
-                          </div>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black transition-colors flex-shrink-0 ${
+                          completedSets[i][si] ? 'bg-accent text-black' : 'bg-white/10 text-muted'
+                        }`}>
+                          {si + 1}
                         </div>
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
+                        
+                        <div className="flex-1 flex items-center justify-between">
+                          <div className="flex items-baseline gap-1">
+                            <span className={`text-xl font-black tracking-tighter ${completedSets[i][si] ? 'text-accent' : 'text-ink'}`}>
+                              {set.reps}
+                            </span>
+                            <span className="text-[10px] font-black text-muted uppercase">reps</span>
+                          </div>
+                          
+                          {set.weight > 0 && (
+                            <div className="flex items-baseline gap-1">
+                              <span className={`text-xl font-black tracking-tighter ${completedSets[i][si] ? 'text-accent' : 'text-ink'}`}>
+                                {set.weight}
+                              </span>
+                              <span className="text-[10px] font-black text-muted uppercase">kg</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${
                           completedSets[i][si] ? 'bg-accent border-accent text-black scale-110' : 'border-white/10 text-transparent'
                         }`}>
-                          <Check size={12} strokeWidth={3} />
+                          <Check size={14} strokeWidth={4} />
                         </div>
                       </button>
                     ))}
@@ -1657,7 +1746,7 @@ function NavButton({ active, onClick, icon, label }: { active: boolean, onClick:
       <div className={`p-1.5 rounded-xl transition-all ${active ? 'bg-surface' : ''}`}>
         {icon}
       </div>
-      <span className={`text-[8px] font-black italic uppercase tracking-tighter transition-all ${active ? 'opacity-100' : 'opacity-0'}`}>{label}</span>
+      <span className={`text-[8px] font-black uppercase tracking-tighter transition-all ${active ? 'opacity-100' : 'opacity-0'}`}>{label}</span>
     </button>
   );
 }

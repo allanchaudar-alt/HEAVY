@@ -24,11 +24,11 @@
 }
 
 .btn-primary {
-  @apply bg-accent text-black px-6 py-3 rounded-lg font-black italic uppercase tracking-tighter transition-all active:scale-95 hover:opacity-90 disabled:opacity-50;
+  @apply bg-accent text-black px-6 py-3 rounded-lg font-black uppercase tracking-tighter transition-all active:scale-95 hover:opacity-90 disabled:opacity-50;
 }
 
 .btn-secondary {
-  @apply bg-surface border border-border text-ink px-6 py-3 rounded-lg font-black italic uppercase tracking-tighter transition-all active:scale-95 hover:bg-white/5;
+  @apply bg-surface border border-border text-ink px-6 py-3 rounded-lg font-black uppercase tracking-tighter transition-all active:scale-95 hover:bg-white/5;
 }
 
 .input-field {
