@@ -308,10 +308,10 @@ export default function App() {
   return (
     <div className="h-[calc(100vh-2rem)] sm:h-[calc(100vh-4rem)] max-w-md mx-auto relative bg-background shadow-2xl rounded-[32px] sm:rounded-[40px] overflow-hidden flex flex-col">
       {/* Header */}
-      <header className="px-6 pt-12 pb-6 flex flex-col items-center relative flex-shrink-0">
+      <header className="px-6 py-10 flex flex-col items-center relative flex-shrink-0">
         <button 
           onClick={() => setIsSettingsOpen(true)}
-          className="absolute right-6 top-12 transition-all active:scale-90 opacity-40 hover:opacity-100"
+          className="absolute right-6 top-10 transition-all active:scale-90 opacity-40 hover:opacity-100"
         >
           <Settings size={24} className="text-accent" />
         </button>
