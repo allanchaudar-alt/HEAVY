@@ -306,24 +306,23 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-2rem)] sm:min-h-[calc(100vh-4rem)] max-w-md mx-auto relative pb-24 bg-background shadow-2xl rounded-[32px] sm:rounded-[40px] overflow-hidden">
+    <div className="h-[calc(100vh-2rem)] sm:h-[calc(100vh-4rem)] max-w-md mx-auto relative bg-background shadow-2xl rounded-[32px] sm:rounded-[40px] overflow-hidden flex flex-col">
       {/* Header */}
-      <header className="px-6 pt-12 pb-6 flex justify-between items-end">
-        <div>
-          <h1 className="text-3xl font-black tracking-tighter italic">HEAVY</h1>
-          <p className="text-muted text-sm capitalize">
-            {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <button 
-            onClick={() => setIsSettingsOpen(true)}
-            className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
-          >
-            <Settings size={20} className="text-gray-500" />
-          </button>
-          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-            <Dumbbell size={20} className="text-accent" />
+      <header className="px-6 pt-12 pb-6 flex flex-col items-center relative flex-shrink-0">
+        <button 
+          onClick={() => setIsSettingsOpen(true)}
+          className="absolute right-6 top-12 transition-all active:scale-90 opacity-40 hover:opacity-100"
+        >
+          <Settings size={24} className="text-accent" />
+        </button>
+
+        <div className="flex flex-col items-center gap-3">
+          <Dumbbell size={30} className="text-accent" />
+          <div className="text-center">
+            <h1 className="text-3xl font-black tracking-tighter italic">HEAVY</h1>
+            <p className="text-muted text-sm capitalize">
+              {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </p>
           </div>
         </div>
       </header>
@@ -398,7 +397,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* Main Content */}
-      <main className="px-6">
+      <main className="flex-1 overflow-y-auto px-6 pb-24">
         <AnimatePresence mode="wait">
           {activeTab === 'dashboard' && (
             <Dashboard 
