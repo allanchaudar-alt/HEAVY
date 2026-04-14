@@ -657,44 +657,6 @@ function Dashboard({
       exit={{ opacity: 0, y: -10 }}
       className="space-y-4"
     >
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="glass-card p-3 flex items-center justify-between h-14 relative group">
-          <div className="flex items-center gap-3">
-            <div className="bg-surface w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
-              <TrendingUp size={14} className="text-accent" />
-            </div>
-            <div>
-              <p className="text-lg font-bold leading-none">{history.length}</p>
-              <p className="text-[9px] text-muted font-black uppercase tracking-tighter">Sessões</p>
-            </div>
-          </div>
-          <button 
-            onClick={onClearHistory}
-            className="p-1.5 bg-destructive/5 text-destructive/40 rounded-lg transition-all hover:bg-destructive hover:text-white opacity-0 group-hover:opacity-100"
-          >
-            <Trash2 size={12} />
-          </button>
-        </div>
-        <div className="glass-card p-3 flex items-center justify-between h-14 relative group">
-          <div className="flex items-center gap-3">
-            <div className="bg-surface w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Dumbbell size={14} className="text-accent" />
-            </div>
-            <div>
-              <p className="text-lg font-bold leading-none">{templates.length}</p>
-              <p className="text-[9px] text-muted font-black uppercase tracking-tighter">Treinos</p>
-            </div>
-          </div>
-          <button 
-            onClick={onClearTemplates}
-            className="p-1.5 bg-destructive/5 text-destructive/40 rounded-lg transition-all hover:bg-destructive hover:text-white opacity-0 group-hover:opacity-100"
-          >
-            <Trash2 size={12} />
-          </button>
-        </div>
-      </div>
-
       {/* Quick Start Section */}
       <section>
         <div className="flex justify-between items-center mb-2">
@@ -1646,6 +1608,10 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
         setTimeLeft((prev) => prev - 1);
       }, 1000);
     } else if (timeLeft === 0) {
+      if (isTimerRunning && navigator.vibrate) {
+        // Double pulse vibration: 200ms on, 100ms off, 200ms on
+        navigator.vibrate([200, 100, 200]);
+      }
       setIsTimerRunning(false);
       clearInterval(interval);
     }
@@ -1842,9 +1808,9 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
             const libEx = library.find(l => l.id === ex.libraryId);
             
             return (
-              <div key={i} className={`rounded-2xl border transition-all overflow-hidden ${
+              <div key={i} className={`rounded-2xl border transition-all duration-500 overflow-hidden ${
                 completed 
-                  ? 'bg-surface border-white/10' 
+                  ? 'bg-accent/10 border-accent/40 shadow-lg shadow-accent/5' 
                   : 'bg-surface border-border'
               }`}>
                 <div className="p-4 flex flex-col gap-4">
