@@ -20,6 +20,7 @@ import {
   Dumbbell, 
   ChevronRight, 
   ChevronDown,
+  ChevronUp,
   Clock,
   Trash2, 
   X,
@@ -72,6 +73,7 @@ interface WorkoutLog {
   date: string;
   title: string;
   exercises: {
+    id: string;
     libraryId: string;
     name: string;
     description: string;
@@ -250,8 +252,9 @@ export default function App() {
       templateId: template.id,
       date: new Date().toISOString(),
       title: template.title,
-      exercises: template.exercises.map(ex => {
+      exercises: template.exercises.map((ex, idx) => {
         return { 
+          id: `${ex.id || idx}-${Date.now()}`,
           libraryId: ex.libraryId,
           name: ex.name, 
           description: ex.description,
@@ -1595,6 +1598,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
   const [showConfirmSave, setShowConfirmSave] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [infoExercise, setInfoExercise] = useState<LibraryExercise | null>(null);
+  const exerciseRefs = useRef<(HTMLDivElement | null)[]>([]);
   
   // Timer States
   const [timerEnabled, setTimerEnabled] = useState(true);
@@ -1638,6 +1642,34 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
     if (isNowCompleted && timerEnabled) {
       startTimer(60); // Default 60s rest
     }
+
+    // Auto scroll to next exercise if this one is completed
+    const exerciseIsNowFullyCompleted = newCompletedSets[exIndex].every(val => val === true);
+    if (exerciseIsNowFullyCompleted && exIndex < currentSession.exercises.length - 1) {
+      setTimeout(() => {
+        exerciseRefs.current[exIndex + 1]?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }, 300);
+    }
+  };
+
+  const moveExercise = (index: number, direction: 'up' | 'down') => {
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= currentSession.exercises.length) return;
+
+    const newExercises = [...currentSession.exercises];
+    const newCompletedSets = [...completedSets];
+
+    // Swap exercises
+    [newExercises[index], newExercises[newIndex]] = [newExercises[newIndex], newExercises[index]];
+    // Swap completed sets state
+    [newCompletedSets[index], newCompletedSets[newIndex]] = [newCompletedSets[newIndex], newCompletedSets[index]];
+
+    setCurrentSession({ ...currentSession, exercises: newExercises });
+    setCompletedSets(newCompletedSets);
+    setHasChanges(true);
   };
 
   const isExerciseCompleted = (exIndex: number) => {
@@ -1808,11 +1840,16 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
             const libEx = library.find(l => l.id === ex.libraryId);
             
             return (
-              <div key={i} className={`rounded-2xl border transition-all duration-500 overflow-hidden ${
-                completed 
-                  ? 'bg-accent/10 border-accent/40 shadow-lg shadow-accent/5' 
-                  : 'bg-surface border-border'
-              }`}>
+              <motion.div 
+                layout
+                ref={el => exerciseRefs.current[i] = el}
+                key={ex.id || i} 
+                className={`rounded-2xl border transition-all duration-500 overflow-hidden ${
+                  completed 
+                    ? 'bg-accent/10 border-accent/40 shadow-lg shadow-accent/5' 
+                    : 'bg-surface border-border'
+                }`}
+              >
                 <div className="p-4 flex flex-col gap-4">
                   <div className="flex items-center gap-4">
                     <div 
@@ -1826,12 +1863,30 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
                         <h4 className={`font-bold text-base leading-tight break-words ${completed ? 'line-through opacity-40' : ''}`}>
                           {ex.name}
                         </h4>
-                        <button 
-                          onClick={() => setInfoExercise(libEx || null)}
-                          className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-muted hover:text-accent hover:bg-surface rounded-full transition-colors"
-                        >
-                          <Info size={18} />
-                        </button>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <div className="flex flex-col">
+                            <button 
+                              onClick={() => moveExercise(i, 'up')}
+                              disabled={i === 0}
+                              className={`p-1 rounded-md transition-colors ${i === 0 ? 'text-white/5 cursor-not-allowed' : 'text-muted hover:text-accent hover:bg-surface'}`}
+                            >
+                              <ChevronUp size={14} />
+                            </button>
+                            <button 
+                              onClick={() => moveExercise(i, 'down')}
+                              disabled={i === currentSession.exercises.length - 1}
+                              className={`p-1 rounded-md transition-colors ${i === currentSession.exercises.length - 1 ? 'text-white/5 cursor-not-allowed' : 'text-muted hover:text-accent hover:bg-surface'}`}
+                            >
+                              <ChevronDown size={14} />
+                            </button>
+                          </div>
+                          <button 
+                            onClick={() => setInfoExercise(libEx || null)}
+                            className="w-7 h-7 flex items-center justify-center text-muted hover:text-accent hover:bg-surface rounded-full transition-colors"
+                          >
+                            <Info size={18} />
+                          </button>
+                        </div>
                       </div>
                       <div className="flex items-center gap-2 mt-1">
                         <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black ${
@@ -1889,7 +1944,7 @@ function ExecutionModal({ session, onClose, onFinish, onUpdateTemplate, library,
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
