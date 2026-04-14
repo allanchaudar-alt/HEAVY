@@ -220,6 +220,14 @@ export default function App() {
     );
   };
 
+  const deleteHistoryItem = (id: string) => {
+    askConfirmation(
+      'Excluir Histórico',
+      'Deseja remover este registro de treino do seu histórico?',
+      () => setHistory(history.filter(h => h.id !== id))
+    );
+  };
+
   const startWorkout = (template: WorkoutTemplate) => {
     const newSession: WorkoutLog = {
       id: Date.now().toString(),
@@ -445,6 +453,8 @@ export default function App() {
               history={history}
               onNavigate={setActiveTab}
               onStartWorkout={startWorkout}
+              onDeleteWorkout={deleteTemplate}
+              onDeleteHistory={deleteHistoryItem}
             />
           )}
           {activeTab === 'templates' && (
@@ -478,11 +488,7 @@ export default function App() {
           {activeTab === 'history' && (
             <HistoryView 
               history={history}
-              onDelete={(id) => askConfirmation(
-                'Excluir Histórico',
-                'Deseja remover este registro de treino do seu histórico?',
-                () => setHistory(history.filter(h => h.id !== id))
-              )}
+              onDelete={deleteHistoryItem}
             />
           )}
         </AnimatePresence>
@@ -605,11 +611,13 @@ function ConfirmationModal({ isOpen, title, message, onConfirm, onCancel }: Conf
 
 // --- Sub-Views ---
 
-function Dashboard({ templates, history, onNavigate, onStartWorkout }: { 
+function Dashboard({ templates, history, onNavigate, onStartWorkout, onDeleteWorkout, onDeleteHistory }: { 
   templates: WorkoutTemplate[], 
   history: WorkoutLog[],
   onNavigate: (tab: Tab) => void,
-  onStartWorkout: (t: WorkoutTemplate) => void
+  onStartWorkout: (t: WorkoutTemplate) => void,
+  onDeleteWorkout: (id: string) => void,
+  onDeleteHistory: (id: string) => void
 }) {
   const lastSession = history[0];
 
@@ -650,17 +658,27 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
         <div className="grid grid-cols-2 gap-3">
           {templates.length > 0 ? (
             templates.map(t => (
-              <button 
-                key={t.id}
-                onClick={() => onStartWorkout(t)}
-                className="glass-card p-3 text-left hover:border-accent transition-colors"
-              >
-                <div className="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mb-2">
-                  <Plus size={12} className="text-accent" />
-                </div>
-                <h3 className="font-bold text-xs truncate">{t.title}</h3>
-                <p className="text-[9px] text-muted">{t.exercises.length} exercícios</p>
-              </button>
+              <div key={t.id} className="relative group">
+                <button 
+                  onClick={() => onStartWorkout(t)}
+                  className="w-full glass-card p-3 text-left hover:border-accent transition-colors"
+                >
+                  <div className="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mb-2">
+                    <Plus size={12} className="text-accent" />
+                  </div>
+                  <h3 className="font-bold text-xs truncate">{t.title}</h3>
+                  <p className="text-[9px] text-muted">{t.exercises.length} exercícios</p>
+                </button>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteWorkout(t.id);
+                  }}
+                  className="absolute top-2 right-2 p-1.5 bg-destructive/5 text-destructive/40 rounded-lg transition-all hover:bg-destructive hover:text-white"
+                >
+                  <Trash2 size={12} />
+                </button>
+              </div>
             ))
           ) : (
             <div className="col-span-2 flex flex-col items-center justify-center py-2">
@@ -684,20 +702,28 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout }: {
           <h2 className="text-base font-black uppercase tracking-tighter">Última Atividade</h2>
         </div>
         {lastSession ? (
-          <div className="glass-card p-3 flex items-center justify-between gap-4">
+          <div className="glass-card p-3 flex items-center justify-between gap-4 relative group">
             <div className="min-w-0">
               <h3 className="font-bold text-sm truncate leading-tight">{lastSession.title}</h3>
               <p className="text-muted text-[10px]">{new Date(lastSession.date).toLocaleDateString()}</p>
             </div>
-            <div className="flex flex-wrap gap-1 justify-end">
-              {lastSession.exercises.slice(0, 2).map((ex, i) => (
-                <span key={i} className="text-[8px] bg-surface px-1.5 py-0.5 rounded-full text-muted font-bold uppercase tracking-tighter">
-                  {ex.name.split(' ')[0]}
-                </span>
-              ))}
-              {lastSession.exercises.length > 2 && (
-                <span className="text-[8px] text-muted">+{lastSession.exercises.length - 2}</span>
-              )}
+            <div className="flex items-center gap-3">
+              <div className="flex flex-wrap gap-1 justify-end">
+                {lastSession.exercises.slice(0, 2).map((ex, i) => (
+                  <span key={i} className="text-[8px] bg-surface px-1.5 py-0.5 rounded-full text-muted font-bold uppercase tracking-tighter">
+                    {ex.name.split(' ')[0]}
+                  </span>
+                ))}
+                {lastSession.exercises.length > 2 && (
+                  <span className="text-[8px] text-muted">+{lastSession.exercises.length - 2}</span>
+                )}
+              </div>
+              <button 
+                onClick={() => onDeleteHistory(lastSession.id)}
+                className="p-1.5 bg-destructive/5 text-destructive/40 rounded-lg transition-all hover:bg-destructive hover:text-white"
+              >
+                <Trash2 size={12} />
+              </button>
             </div>
           </div>
         ) : (
