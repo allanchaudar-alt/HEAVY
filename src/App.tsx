@@ -228,6 +228,22 @@ export default function App() {
     );
   };
 
+  const clearHistory = () => {
+    askConfirmation(
+      'Limpar Histórico',
+      'Tem certeza que deseja apagar TODAS as sessões do seu histórico? Esta ação é irreversível.',
+      () => setHistory([])
+    );
+  };
+
+  const clearTemplates = () => {
+    askConfirmation(
+      'Limpar Treinos',
+      'Tem certeza que deseja apagar TODOS os seus treinos salvos? Esta ação é irreversível.',
+      () => setTemplates([])
+    );
+  };
+
   const startWorkout = (template: WorkoutTemplate) => {
     const newSession: WorkoutLog = {
       id: Date.now().toString(),
@@ -455,6 +471,8 @@ export default function App() {
               onStartWorkout={startWorkout}
               onDeleteWorkout={deleteTemplate}
               onDeleteHistory={deleteHistoryItem}
+              onClearHistory={clearHistory}
+              onClearTemplates={clearTemplates}
             />
           )}
           {activeTab === 'templates' && (
@@ -611,13 +629,24 @@ function ConfirmationModal({ isOpen, title, message, onConfirm, onCancel }: Conf
 
 // --- Sub-Views ---
 
-function Dashboard({ templates, history, onNavigate, onStartWorkout, onDeleteWorkout, onDeleteHistory }: { 
+function Dashboard({ 
+  templates, 
+  history, 
+  onNavigate, 
+  onStartWorkout, 
+  onDeleteWorkout, 
+  onDeleteHistory,
+  onClearHistory,
+  onClearTemplates
+}: { 
   templates: WorkoutTemplate[], 
   history: WorkoutLog[],
   onNavigate: (tab: Tab) => void,
   onStartWorkout: (t: WorkoutTemplate) => void,
   onDeleteWorkout: (id: string) => void,
-  onDeleteHistory: (id: string) => void
+  onDeleteHistory: (id: string) => void,
+  onClearHistory: () => void,
+  onClearTemplates: () => void
 }) {
   const lastSession = history[0];
 
@@ -630,23 +659,39 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout, onDeleteWor
     >
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="glass-card p-3 flex items-center gap-3 h-14">
-          <div className="bg-surface w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
-            <TrendingUp size={14} className="text-accent" />
+        <div className="glass-card p-3 flex items-center justify-between h-14 relative group">
+          <div className="flex items-center gap-3">
+            <div className="bg-surface w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+              <TrendingUp size={14} className="text-accent" />
+            </div>
+            <div>
+              <p className="text-lg font-bold leading-none">{history.length}</p>
+              <p className="text-[9px] text-muted font-black uppercase tracking-tighter">Sessões</p>
+            </div>
           </div>
-          <div>
-            <p className="text-lg font-bold leading-none">{history.length}</p>
-            <p className="text-[9px] text-muted font-black uppercase tracking-tighter">Sessões</p>
-          </div>
+          <button 
+            onClick={onClearHistory}
+            className="p-1.5 bg-destructive/5 text-destructive/40 rounded-lg transition-all hover:bg-destructive hover:text-white opacity-0 group-hover:opacity-100"
+          >
+            <Trash2 size={12} />
+          </button>
         </div>
-        <div className="glass-card p-3 flex items-center gap-3 h-14">
-          <div className="bg-surface w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
-            <Dumbbell size={14} className="text-accent" />
+        <div className="glass-card p-3 flex items-center justify-between h-14 relative group">
+          <div className="flex items-center gap-3">
+            <div className="bg-surface w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Dumbbell size={14} className="text-accent" />
+            </div>
+            <div>
+              <p className="text-lg font-bold leading-none">{templates.length}</p>
+              <p className="text-[9px] text-muted font-black uppercase tracking-tighter">Treinos</p>
+            </div>
           </div>
-          <div>
-            <p className="text-lg font-bold leading-none">{templates.length}</p>
-            <p className="text-[9px] text-muted font-black uppercase tracking-tighter">Treinos</p>
-          </div>
+          <button 
+            onClick={onClearTemplates}
+            className="p-1.5 bg-destructive/5 text-destructive/40 rounded-lg transition-all hover:bg-destructive hover:text-white opacity-0 group-hover:opacity-100"
+          >
+            <Trash2 size={12} />
+          </button>
         </div>
       </div>
 
@@ -668,15 +713,6 @@ function Dashboard({ templates, history, onNavigate, onStartWorkout, onDeleteWor
                   </div>
                   <h3 className="font-bold text-xs truncate">{t.title}</h3>
                   <p className="text-[9px] text-muted">{t.exercises.length} exercícios</p>
-                </button>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteWorkout(t.id);
-                  }}
-                  className="absolute top-2 right-2 p-1.5 bg-destructive/5 text-destructive/40 rounded-lg transition-all hover:bg-destructive hover:text-white"
-                >
-                  <Trash2 size={12} />
                 </button>
               </div>
             ))
